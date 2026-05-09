@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">ShoppingApp</string>
+    <string name="home_page">Gemstore</string>
+    <string name="wishList_page">My Wishlist</string>
+    <string name="discover_page">Discover</string>
+    <string name="search_page"/>
+    <string name="productList_page"/>
+    <string name="productDetail_page"/>
+    <string name="cart_page">Your Cart</string>
+    <string name="profile_page">Profile</string>
+    <string name="profileSettings_page">Profile Settings</string>
+    <string name="settings_page">Settings</string>
+    <string name="checkout_page">Check out</string>
+    <string name="notification_page">Notification</string>
+    <string name="voucher_page">Voucher</string>
+    <string name="delivery_address_page">Delivery address</string>
+    <string name="payment_page">Payment</string>
+</resources>
