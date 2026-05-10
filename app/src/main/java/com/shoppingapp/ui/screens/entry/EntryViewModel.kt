@@ -1,5 +1,6 @@
 package com.shoppingapp.ui.screens.entry
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,14 +10,17 @@ import com.shoppingapp.data.Repository
 import com.shoppingapp.data.local.entity.UserEntity
 import com.shoppingapp.ui.screens.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.core.content.edit
 
 @HiltViewModel
 class EntryViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    @ApplicationContext private val context: Context
 ): ViewModel() {
     var firstName by mutableStateOf("")
     var lastName by mutableStateOf("")
@@ -74,6 +78,12 @@ class EntryViewModel @Inject constructor(
 
             mainViewModel.setCurrentUser(user)
 
+            context.getSharedPreferences("auth", Context.MODE_PRIVATE)
+                .edit {
+                    putBoolean("isLoggedIn", true)
+                        .putString("userEmail", user.email)
+                }
+
             _authSuccess.value = true
         }
     }
@@ -94,6 +104,12 @@ class EntryViewModel @Inject constructor(
             }
 
             mainViewModel.setCurrentUser(user)
+
+            context.getSharedPreferences("auth", Context.MODE_PRIVATE)
+                .edit {
+                    putBoolean("isLoggedIn", true)
+                        .putString("userEmail", user.email)
+                }
 
             _authSuccess.value = true
         }

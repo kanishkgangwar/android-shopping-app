@@ -1,18 +1,15 @@
 package com.shoppingapp.ui.screens
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shoppingapp.data.Repository
 import com.shoppingapp.data.local.entity.CartItemEntity
-import com.shoppingapp.data.local.entity.DeliveryAddressEntity
 import com.shoppingapp.data.local.entity.UserEntity
 import com.shoppingapp.ui.components.ProductUiModel
 import com.shoppingapp.ui.components.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -71,9 +68,7 @@ class MainViewModel @Inject constructor(
             it.title.contains(query, ignoreCase = true)
         }
 
-        _filteredProducts.value = if (titleMatches.isNotEmpty()) {
-            titleMatches
-        } else {
+        _filteredProducts.value = titleMatches.ifEmpty {
             _allProducts.value.filter {
                 it.category.contains(query, ignoreCase = true)
             }
@@ -134,5 +129,13 @@ class MainViewModel @Inject constructor(
 
     fun setCurrentUser(user: UserEntity) {
         _currentUser.value = user
+    }
+
+    // Load user login
+    fun loadLoggedInUser(email: String) {
+        viewModelScope.launch {
+            val user = repository.getUserByEmail(email)
+            _currentUser.value = user
+        }
     }
 }

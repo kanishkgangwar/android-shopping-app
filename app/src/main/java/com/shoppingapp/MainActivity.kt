@@ -1,12 +1,14 @@
 package com.shoppingapp
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
@@ -71,9 +73,30 @@ class MainActivity : ComponentActivity() {
 )
 @Composable
 fun AppNavHost(navController: NavHostController){
+
+    val context = LocalContext.current
+
+    val sharedPreferences =
+        context.getSharedPreferences("auth", Context.MODE_PRIVATE)
+
+    val isLoggedIn =
+        sharedPreferences.getBoolean("isLoggedIn", false)
+
+    val savedEmail =
+        sharedPreferences.getString("userEmail", null)
+
+    val appMainViewModel: MainViewModel =
+        hiltViewModel(LocalContext.current as ComponentActivity)
+
+    LaunchedEffect(Unit) {
+        if (isLoggedIn && savedEmail != null) {
+            appMainViewModel.loadLoggedInUser(savedEmail)
+        }
+    }
+
     NavHost(
         navController = navController,
-        startDestination = "signup"
+        startDestination = if (isLoggedIn) "home" else "signup"
     ) {
         composable("signup") {
             val viewModel: EntryViewModel = hiltViewModel()
